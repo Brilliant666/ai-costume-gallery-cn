@@ -85,7 +85,7 @@ html = r"""<!doctype html>
   --r:14px;
   --f:system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans SC","Microsoft YaHei",sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --imgbg:#f3f3f1;
+  --imgbg:#e9e9e7;
 }
 html[data-theme="dark"]{
   --bg:#0d0f12;--bg2:#14171c;--panel:#1a1e24;--line:#272c34;--line2:#343a44;
@@ -209,24 +209,40 @@ select:focus{border-color:var(--ac)}
 
 /* grid */
 main{max-width:1680px;margin:0 auto;padding:22px clamp(16px,4vw,48px) 90px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;
   transition:transform .18s ease,box-shadow .18s ease,border-color .18s;outline:none;display:flex;flex-direction:column}
 .card:hover,.card:focus-visible{transform:translateY(-4px);box-shadow:var(--sh);border-color:var(--hover-border)}
 .card:focus-visible{box-shadow:0 0 0 2px var(--ac)}
 .ph{position:relative;aspect-ratio:2/3;background:var(--imgbg);overflow:hidden}
 .ph img{width:100%;height:100%;object-fit:contain;display:block}
+/* 卡片图片渐显：加载完成前透明，避免硬切 */
+.card img{opacity:0;transition:opacity .32s ease}
+.card img.ld{opacity:1}
 .badge{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap}
 .badge span{background:var(--badge-bg);color:#fff;font-size:10.5px;padding:3px 8px;border-radius:99px;
   backdrop-filter:blur(4px);font-variant-numeric:tabular-nums;letter-spacing:.03em}
 .badge span.cat{background:var(--ac);color:var(--on-ac);font-weight:700}
-.meta{padding:11px 13px 13px;display:flex;flex-direction:column;gap:8px;flex:1}
+.meta{padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.meta .mid{font-family:var(--mono);font-size:11px;color:var(--tx3);letter-spacing:.04em}
+.meta .mcat{font-size:11px;color:var(--tx2);white-space:nowrap}
+/* 标签改为悬停浮层，不占卡片高度 */
+.tagbar{position:absolute;left:0;right:0;bottom:0;padding:26px 10px 9px;display:flex;flex-wrap:wrap;gap:4px;
+  background:linear-gradient(transparent,rgba(8,10,14,.82));opacity:0;transition:opacity .18s ease;pointer-events:none}
+.card:hover .tagbar,.card:focus-visible .tagbar{opacity:1}
+.tagbar i{font-style:normal;font-size:10px;padding:2px 7px;border-radius:5px;
+  background:rgba(255,255,255,.16);color:#fff;backdrop-filter:blur(3px);white-space:nowrap}
 .meta .id{font-family:var(--mono);font-size:11px;color:var(--tx3);letter-spacing:.04em}
 .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
 .tags i{font-style:normal;font-size:10.5px;padding:2px 7px;border-radius:5px;background:var(--hover);color:var(--tx2);
   white-space:nowrap}
 .tags i.more{background:transparent;color:var(--tx3);padding:2px 2px}
 .empty{grid-column:1/-1;padding:90px 0;text-align:center;color:var(--tx3);font-size:14px;line-height:1.9}
+/* 分页：与原站一致，每次追加一页 */
+.loadmore{display:block;margin:34px auto 0;height:46px;padding:0 30px;border:1px solid var(--line2);
+  border-radius:12px;background:var(--panel);color:var(--tx2);font-size:13.5px;cursor:pointer;transition:.15s}
+.loadmore:hover{border-color:var(--ac);color:var(--ac)}
+.loadmore[hidden]{display:none}
 .empty b{display:block;color:var(--tx2);font-size:15px;margin-bottom:6px}
 
 /* modal */
@@ -341,7 +357,7 @@ footer a:hover{color:var(--ac)}
   </div>
 </div>
 
-<main><div class="grid" id="grid"></div></main>
+<main><div class="grid" id="grid"></div><button class="loadmore" id="more" hidden></button></main>
 
 <footer id="foot"></footer>
 
@@ -377,7 +393,8 @@ const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'
 
 let LANG  = document.documentElement.dataset.lang  || 'zh';
 let THEME = document.documentElement.dataset.theme || 'dark';
-const S = {cat:null, sort:'cat', q:'', tags:new Set()};
+const PAGE = 120;   // 与原站一致
+const S = {cat:null, sort:'cat', q:'', tags:new Set(), n:PAGE};
 
 const t = k => (UI[LANG] && UI[LANG][k]) || (UI.ja[k] || k);
 const isZh = () => LANG === 'zh';
@@ -519,7 +536,7 @@ const SORTERS = {
 };
 
 /* ── 渲染 ── */
-const grid=$('#grid'), countEl=$('#count');
+const grid=$('#grid'), countEl=$('#count'), moreEl=$('#more');
 let VIEW=[];
 
 function draw(){
@@ -530,20 +547,55 @@ function draw(){
 
   if(!VIEW.length){
     grid.innerHTML = '<div class="empty"><b>'+esc(t('emptyTitle'))+'</b>'+esc(t('emptyDesc'))+'</div>';
+    moreEl.hidden = true;
     badge(); return;
   }
 
-  grid.innerHTML = VIEW.map((x,i)=>{
-    const tags = x.t.slice(0,5).map(tg=>'<i title="'+esc(tg)+'">'+esc(nT(tg))+'</i>').join('');
-    const more = x.t.length>5 ? '<i class="more">+'+(x.t.length-5)+'</i>' : '';
-    return '<article class="card" tabindex="0" data-i="'+i+'">'+
-      '<div class="ph"><img loading="lazy" decoding="async" src="'+esc(x.th)+'" alt="'+esc(x.i)+'">'+
-        '<div class="badge"><span class="cat">'+esc(nC(x.c))+'</span><span>'+esc(x.i)+'</span></div></div>'+
-      '<div class="meta"><div class="tags">'+tags+more+'</div></div></article>';
-  }).join('');
+  // 每次筛选/排序变化都回到第一页
+  S.n = PAGE;
+  grid.innerHTML = VIEW.slice(0, S.n).map(card).join('');
+  sweepLoaded();
+  syncMore();
   badge();
 }
 
+// 追加下一页（不清空已有卡片）
+function addMore(){
+  if(S.n >= VIEW.length) return;
+  const from = S.n;
+  S.n = Math.min(S.n + PAGE, VIEW.length);
+  grid.insertAdjacentHTML('beforeend', VIEW.slice(from, S.n).map((x,k)=>card(x, from+k)).join(''));
+  sweepLoaded();
+  syncMore();
+}
+
+function card(x, i){
+  const tags = x.t.slice(0,5).map(tg=>'<i title="'+esc(tg)+'">'+esc(nT(tg))+'</i>').join('');
+  const over = x.t.length>5 ? '<i class="more">+'+(x.t.length-5)+'</i>' : '';
+  return '<article class="card" tabindex="0" data-i="'+i+'">'+
+    '<div class="ph"><img'+(i<12?' fetchpriority="high"':' loading="lazy"')+' decoding="async" src="'+esc(x.th)+'" alt="'+esc(x.i)+'">'+
+      '<div class="tagbar">'+tags+over+'</div></div>'+
+    '<div class="meta"><span class="mid">'+esc(x.i)+'</span><span class="mcat">'+esc(nC(x.c))+'</span></div></article>';
+}
+
+// 已在缓存中的图片不会触发 load，直接补渐显类
+function sweepLoaded(){
+  grid.querySelectorAll('img').forEach(im=>{ if(im.complete) im.classList.add('ld'); });
+}
+
+function syncMore(){
+  const rest = VIEW.length - S.n;
+  moreEl.hidden = rest <= 0;
+  moreEl.textContent = rest > 0 ? ('加载更多（剩余 ' + rest + ' 件）') : '';
+}
+
+moreEl.onclick = addMore;
+// 滚动接近底部时自动加载下一页（与原站一致，预取 800px）
+if('IntersectionObserver' in window){
+  new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)) addMore(); }, {rootMargin:'800px'}).observe(moreEl);
+}
+grid.addEventListener('load', e=>{ if(e.target.tagName==='IMG') e.target.classList.add('ld'); }, true);
+grid.addEventListener('error', e=>{ if(e.target.tagName==='IMG') e.target.classList.add('ld'); }, true);
 grid.addEventListener('click', e=>{
   const c=e.target.closest('.card'); if(!c) return;
   openM(+c.dataset.i);

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """校验三档文件完整性与分辨率"""
-import json, os, struct
+import json, os, struct, sys
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 rows = json.load(open(os.path.join(root, "manifest.json"), encoding="utf-8"))
@@ -74,3 +74,14 @@ if total_ok == 0:
     print("  python scripts/download.py img 14      # 中图，约 114 MB")
     print("  python scripts/download.py png 14      # 原图，约 1.33 GB（可选）")
     print("下载完成后重新运行本脚本即可校验。")
+
+
+# [deploy-patch] 存在缺失或损坏文件时返回非零退出码
+_missing = sum(len(report[k]["missing"]) for k in report)
+_bad = sum(len(report[k]["bad"]) for k in report)
+if _missing or _bad:
+    print()
+    print("校验失败：缺失 %d 项，损坏 %d 项" % (_missing, _bad))
+    sys.exit(1)
+print()
+print("校验通过：全部文件存在且可解码")
