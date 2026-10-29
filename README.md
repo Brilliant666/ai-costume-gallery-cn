@@ -35,13 +35,6 @@
 - 🔎 **SEO 就绪**：robots.txt / sitemap.xml / 404.html / og-cover / JSON-LD 结构化数据
 - 💡 **提示词友好**：标签的英文原文随时可复制，直接用于 AI 出图
 
-## 📸 页面预览
-
-| 暗色 · 列表 | 浅色 · 分面筛选 |
-|:---:|:---:|
-| ![暗色主题](docs/preview-1.jpg) | ![筛选面板](docs/preview-2.jpg) |
-
-社交分享封面：`og-cover.jpg`（1200×630）
 
 ## 📊 数据规模
 
@@ -98,7 +91,6 @@
 │   ├── costume-zh.json     # 中文数据（含英/日/中三语标签）
 │   ├── meta.json           # 分类与标签分组元数据
 │   └── translations.csv    # 英→日→中对照表（94 条）
-├── docs/                   # 预览截图
 ├── scripts/
 │   ├── extract.py          # 从原站存档解析内嵌数据
 │   ├── manifest.py         # 生成清单
@@ -273,11 +265,6 @@ open_file_cache max=10000 inactive=60s;
 - 🌗 **2 テーマ** / 🌐 **2 言語**（設定は保存される）
 - 📦 **依存ゼロ**：単一 HTML、データ埋め込み、`file://` でそのまま開ける
 
-## 📸 画面プレビュー
-
-| ダーク · 一覧 | ライト · 絞り込み |
-|:---:|:---:|
-| ![ダーク](docs/preview-1.jpg) | ![絞り込み](docs/preview-2.jpg) |
 
 ## 📊 データ規模
 
@@ -336,11 +323,6 @@ Original author: ギア（[@giaaibusi](https://x.com/giaaibusi)）
 - 🌗 **Dual theme** and 🌐 **bilingual UI** with persisted preferences
 - 📦 **Zero dependencies**: one HTML file with embedded data — opens via `file://`, no server needed
 
-## 📸 Preview
-
-| Dark · list | Light · facets |
-|:---:|:---:|
-| ![dark](docs/preview-1.jpg) | ![facets](docs/preview-2.jpg) |
 
 ## 📊 Scale
 
