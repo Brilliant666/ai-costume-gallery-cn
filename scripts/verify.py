@@ -66,3 +66,11 @@ for tier, _, _ in TIERS:
         print("        损坏 %d: %s" % (len(t["bad"]), t["bad"][:5]))
     print()
 print("三档合计: %.1f MB" % (total / 1048576))
+
+total_ok = sum(report[k]["ok"] for k in report)
+if total_ok == 0:
+    print("提示：所有文件都缺失，说明还没下载素材。请先运行：")
+    print("  python scripts/download.py thumb 16    # 缩略图，约 10 MB")
+    print("  python scripts/download.py img 14      # 中图，约 114 MB")
+    print("  python scripts/download.py png 14      # 原图，约 1.33 GB（可选）")
+    print("下载完成后重新运行本脚本即可校验。")

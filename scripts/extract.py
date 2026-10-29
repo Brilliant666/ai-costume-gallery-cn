@@ -1,11 +1,29 @@
 # -*- coding: utf-8 -*-
 """从 raw/index.html（原站存档）解析内嵌数据 → data/costume.json"""
-import json, os, re
+import json, os, re, sys
+
+import json, os, re, sys
 
 base = os.path.dirname(os.path.abspath(__file__))
 root = os.path.dirname(base)
+
+SRC = os.path.join(root, "raw", "index.html")
+if not os.path.exists(SRC):
+    sys.exit(
+        "找不到 raw/index.html。\n"
+        "\n"
+        "这是原站的整站存档，包含原作者的全部数据与样式，\n"
+        "因版权原因不随仓库分发，因此新克隆的仓库里没有这个文件。\n"
+        "\n"
+        "本脚本仅在需要重新从原站解析数据时使用，普通使用不需要它：\n"
+        "  - 仓库已包含解析好的 data/pose.json（或 data/costume.json）\n"
+        "  - 想直接看画廊，只需运行 scripts/download.py 下载图片\n"
+        "\n"
+        "若确实要重新解析，请自行访问原站并保存其 HTML 到 raw/index.html。"
+    )
+
 # 原站存档不随仓库分发，只在本地产物里保留
-html = open(os.path.join(root, "raw", "index.html"), encoding="utf-8").read()
+html = open(SRC, encoding="utf-8").read()
 
 i = html.find("const D=[")
 j = html.index("[", i)
