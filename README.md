@@ -145,6 +145,9 @@ python scripts/download.py png 14      # 原图   1366×2048 png，约 1.33 GB�
 
 ## 📦 生产部署
 
+> 两个站点一起部署到 VPS 的完整流程（前置检查 / nginx / certbot / 验证清单 / 回滚）
+> 见 [ai-pose-gallery-cn 的 DEPLOY.md](https://github.com/Brilliant666/ai-pose-gallery-cn/blob/main/DEPLOY.md)。
+
 纯静态站点，任意静态托管都能跑。
 
 ### Cloudflare Pages
