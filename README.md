@@ -36,6 +36,14 @@
 - 💡 **提示词友好**：标签的英文原文随时可复制，直接用于 AI 出图
 
 
+## 📸 页面预览
+
+| 暗色 · 列表 | 浅色 · 分面筛选 |
+|:---:|:---:|
+| ![暗色主题](docs/preview-1.jpg) | ![筛选面板](docs/preview-2.jpg) |
+
+> 截图中的素材已做模糊处理，仅演示界面结构。
+
 ## 📊 数据规模
 
 | 分类 | 编号前缀 | 数量 |
@@ -83,7 +91,8 @@
 ├── robots.txt
 ├── sitemap.xml
 ├── 404.html
-├── og-cover.jpg            # 1200×630 社交分享封面
+├── og-cover.jpg            # 1200×630 社交分享封面（自制纯排版）
+├── docs/                   # 界面预览截图（素材已模糊）
 ├── manifest.json           # 全量清单（含原始 URL 与本地路径）
 ├── manifest.csv            # 同上，Excel 可直接打开
 ├── data/
@@ -266,6 +275,14 @@ open_file_cache max=10000 inactive=60s;
 - 📦 **依存ゼロ**：単一 HTML、データ埋め込み、`file://` でそのまま開ける
 
 
+## 📸 画面プレビュー
+
+| ダーク · 一覧 | ライト · 絞り込み |
+|:---:|:---:|
+| ![ダーク](docs/preview-1.jpg) | ![絞り込み](docs/preview-2.jpg) |
+
+> スクリーンショット内の素材はぼかし処理済みです（UI 構造の説明用）。
+
 ## 📊 データ規模
 
 | カテゴリ | 接頭辞 | 件数 |
@@ -323,6 +340,14 @@ Original author: ギア（[@giaaibusi](https://x.com/giaaibusi)）
 - 🌗 **Dual theme** and 🌐 **bilingual UI** with persisted preferences
 - 📦 **Zero dependencies**: one HTML file with embedded data — opens via `file://`, no server needed
 
+
+## 📸 Preview
+
+| Dark · list | Light · facets |
+|:---:|:---:|
+| ![dark](docs/preview-1.jpg) | ![facets](docs/preview-2.jpg) |
+
+> Artwork in the screenshots is blurred; they only illustrate the UI structure.
 
 ## 📊 Scale
 
