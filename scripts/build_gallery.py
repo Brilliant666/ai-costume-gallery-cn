@@ -44,7 +44,7 @@ payload = json.dumps({
 }, ensure_ascii=False, separators=(",", ":"))
 
 html = r"""<!doctype html>
-<html lang="zh-CN" data-theme="dark" data-lang="zh">
+<html lang="zh-CN" data-theme="light" data-lang="zh">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -336,8 +336,8 @@ footer a:hover{color:var(--ac)}
           </button>
         </div>
         <div class="switch" id="langSw" role="group">
-          <button data-l="ja">日本語</button>
           <button data-l="zh">中文</button>
+          <button data-l="ja">日本語</button>
         </div>
       </div>
     </div>
@@ -392,7 +392,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 let LANG  = document.documentElement.dataset.lang  || 'zh';
-let THEME = document.documentElement.dataset.theme || 'dark';
+let THEME = document.documentElement.dataset.theme || 'light';
 const PAGE = 120;   // 与原站一致
 const S = {cat:null, sort:'cat', q:'', tags:new Set(), n:PAGE};
 
