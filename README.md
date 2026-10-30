@@ -6,7 +6,7 @@
 
 [中文](#中文) · [日本語](#日本語) · [English](#english)
 
-> **同系列** · [人像集](https://github.com/Brilliant666/ai-portrait-gallery-cn) · [姿势集](https://github.com/Brilliant666/ai-pose-gallery-cn) · [深度姿势集](https://github.com/Brilliant666/ai-pose-depth-gallery-cn) · [**四站合一仓库 →**](https://github.com/Brilliant666/ai-image-gallery)
+> **同系列** · [在线浏览 photoai.life](https://photoai.life/) · [人像集](https://github.com/Brilliant666/ai-portrait-gallery-cn) · [姿势集](https://github.com/Brilliant666/ai-pose-gallery-cn) · [深度姿势集](https://github.com/Brilliant666/ai-pose-depth-gallery-cn) · [**四站合一仓库 →**](https://github.com/Brilliant666/ai-image-gallery)
 
 > ⚠️ **图片素材著作权归原作者 ギア 所有，原站条款禁止再分发。本仓库不含任何图片文件。**
 > 详见 [NOTICE.md](NOTICE.md)。
